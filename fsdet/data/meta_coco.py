@@ -1,7 +1,6 @@
 import contextlib
 import io
 import os
-
 import numpy as np
 from detectron2.data import DatasetCatalog, MetadataCatalog
 from detectron2.structures import BoxMode
@@ -110,14 +109,17 @@ def load_coco_json(json_file, image_root, metadata, dataset_name):
                 assert anno.get("ignore", 0) == 0
 
                 obj = {key: anno[key] for key in ann_keys if key in anno}
-
+                # print("ID Map: ", id_map)
+                # print("Obj: ", obj)
                 obj["bbox_mode"] = BoxMode.XYWH_ABS
                 if obj["category_id"] in id_map:
                     obj["category_id"] = id_map[obj["category_id"]]
                     objs.append(obj)
             record["annotations"] = objs
             dataset_dicts.append(record)
-
+    print('==== dataset_dicts returned in "load_coco_json"')
+    print(dataset_dicts)
+    print('==== dataset_dicts returned in "load_coco_json"')
     return dataset_dicts
 
 
@@ -127,7 +129,7 @@ def register_meta_coco(name, metadata, imgdir, annofile):
         lambda: load_coco_json(annofile, imgdir, metadata, name),
     )
 
-    if "_base" in name or "_novel" in name:
+    if "_base" in name or "_novel" in name or "_cats" in name:
         split = "base" if "_base" in name else "novel"
         metadata["thing_dataset_id_to_contiguous_id"] = metadata[
             "{}_dataset_id_to_contiguous_id".format(split)

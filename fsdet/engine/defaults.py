@@ -41,6 +41,7 @@ from fsdet.modeling import build_model
 from fsdet.utils.file_io import PathManager
 from fvcore.nn.precise_bn import get_bn_modules
 from torch.nn.parallel import DistributedDataParallel
+import getpass
 
 __all__ = [
     "default_argument_parser",
@@ -114,7 +115,8 @@ def default_argument_parser():
     # PyTorch still may leave orphan processes in multi-gpu training.
     # Therefore we use a deterministic way to obtain port,
     # so that users are aware of orphan processes by seeing the port occupied.
-    port = 2 ** 15 + 2 ** 14 + hash(os.getuid()) % 2 ** 14
+    # port = 2 ** 15 + 2 ** 14 + hash(os.getuid()) % 2 ** 14
+    port = 2 ** 15 + 2 ** 14 + hash(getpass.getuser()) % 2 ** 14
     parser.add_argument(
         "--dist-url", default="tcp://127.0.0.1:{}".format(port)
     )
@@ -324,6 +326,7 @@ class DefaultTrainer(SimpleTrainer):
             scheduler=self.scheduler,
         )
         self.start_iter = 0
+        print("Start Iteration Inside of Init: ", self.start_iter)
         self.max_iter = cfg.SOLVER.MAX_ITER
         self.cfg = cfg
 
@@ -340,12 +343,13 @@ class DefaultTrainer(SimpleTrainer):
         """
         # The checkpoint stores the training iteration that just finished, thus we start
         # at the next iteration (or iter zero if there's no checkpoint).
-        self.start_iter = (
-            self.checkpointer.resume_or_load(
-                self.cfg.MODEL.WEIGHTS, resume=resume
-            ).get("iteration", -1)
-            + 1
-        )
+        # self.start_iter = (
+        #     self.checkpointer.resume_or_load(
+        #         self.cfg.MODEL.WEIGHTS, resume=resume
+        #     ).get("iteration", -1)
+        #     + 1
+        # )
+        self.checkpointer.resume_or_load(self.cfg.MODEL.WEIGHTS, resume=resume)
 
     def build_hooks(self):
         """

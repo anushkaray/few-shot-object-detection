@@ -83,37 +83,43 @@ def register_all_coco(root="datasets"):
 
     # register meta datasets
     METASPLITS = [
-        (
-            "coco_trainval_all",
-            "coco/trainval2014",
-            "cocosplit/datasplit/trainvalno5k.json",
-        ),
-        (
-            "coco_trainval_base",
-            "coco/trainval2014",
-            "cocosplit/datasplit/trainvalno5k.json",
-        ),
-        ("coco_test_all", "coco/val2014", "cocosplit/datasplit/5k.json"),
-        ("coco_test_base", "coco/val2014", "cocosplit/datasplit/5k.json"),
-        ("coco_test_novel", "coco/val2014", "cocosplit/datasplit/5k.json"),
+        # (
+        #     "coco_trainval_all",
+        #     "coco/trainval2014",
+        #     "cocosplit/datasplit/trainvalno5k.json",
+        # ),
+        # (
+        #     "coco_trainval_base",
+        #     "coco/trainval2014",
+        #     "cocosplit/datasplit/trainvalno5k.json",
+        # ),
+        # ("coco_test_all", "coco/val2014", "cocosplit/datasplit/5k.json"),
+        # ("coco_test_base", "coco/val2014", "cocosplit/datasplit/5k.json"),
+        # ("coco_test_novel", "coco/val2014", "cocosplit/datasplit/5k.json"),
+        ("coco_train_cats", "coco/annotations/Dataset", "coco/annotations/train.json"),
+        ("coco_test_cats", "coco/annotations/Dataset", "coco/annotations/test.json"),
     ]
 
     # register small meta datasets for fine-tuning stage
-    for prefix in ["all", "novel"]:
-        for shot in [1, 2, 3, 5, 10, 30]:
-            for seed in range(10):
-                seed = "" if seed == 0 else "_seed{}".format(seed)
-                name = "coco_trainval_{}_{}shot{}".format(prefix, shot, seed)
-                METASPLITS.append((name, "coco/trainval2014", ""))
+    # for prefix in ["all", "novel"]:
+    #     for shot in [1, 2, 3, 5, 10, 30]:
+    #         for seed in range(10):
+    #             seed = "" if seed == 0 else "_seed{}".format(seed)
+    #             name = "coco_trainval_{}_{}shot{}".format(prefix, shot, seed)
+    #             METASPLITS.append((name, "coco/trainval2014", ""))
+
 
     for name, imgdir, annofile in METASPLITS:
+        metadata = _get_builtin_metadata("coco_fewshot")
+        # print(f'==== metadata in "_get_builtin_metadata" function, name = {name} ====')
+        # print(metadata)
+        # print(f'==== metadata in "_get_builtin_metadata" function, name = {name} ====')
         register_meta_coco(
             name,
-            _get_builtin_metadata("coco_fewshot"),
+            metadata,
             os.path.join(root, imgdir),
             os.path.join(root, annofile),
         )
-
 
 # ==== Predefined datasets and splits for LVIS ==========
 

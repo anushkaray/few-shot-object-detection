@@ -191,7 +191,9 @@ class FastRCNNOutputs(object):
         Log the accuracy metrics to EventStorage.
         """
         num_instances = self.gt_classes.numel()
-        pred_classes = self.pred_class_logits.argmax(dim=1)
+        # pred_classes = self.pred_class_logits.argmax(dim=1)
+        pred_classes = self.pred_class_logits.to("cpu").argmax(dim=1)
+        pred_classes = pred_classes.to("dml")
         bg_class_ind = self.pred_class_logits.shape[1] - 1
 
         fg_inds = (self.gt_classes >= 0) & (self.gt_classes < bg_class_ind)
