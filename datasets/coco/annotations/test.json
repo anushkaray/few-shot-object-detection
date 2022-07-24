@@ -1,0 +1,1 @@
+{"images":[{"height":1441,"width":2500,"id":1,"file_name":"screenshot_005.bmp"}],"annotations":[{"iscrowd":0,"image_id":1,"bbox":[1591,423,423,762],"segmentation":[[1593,456,1608,1185,2014,1184,1994,426,1591,422]],"category_id":201,"id":1,"area":307210}],"categories":[{"id":0,"name":"cat","supercategory":"cat"}]}

@@ -21,7 +21,7 @@ exp/
 checkpoints/
 
 # datasets
-datasets/coco
+# datasets/coco
 datasets/cocosplit
 datasets/VOC2007
 datasets/VOC2012
